@@ -165,16 +165,15 @@ It is **highly recommended** that you use a reverse proxy to serve this content.
 		- eg: `/dressage/electrochronometer/himself-she-eciliate`
 	- `{OVER}`
 		- Generates a random link to a sibling page
-		- eg: Using `{OVER}` on `/neighborliness/wont_unhonest` might generate a page to `/neighborliness/hooliganism`
+		- eg: When visiting `/neighborliness/wont_unhonest`, an `{OVER}` tag  might be replaced with `/neighborliness/hooliganism`
 	- `{NEWTITLE}`
 		- Generates a random title
 		- Uses a series of random words in Title Capitalization
 		- eg: 'Nectarial Electrofusion Which Dephosphorization'
-		- If this is followed by a `{LINK}` or `{OVER}` tag, the title and link will by synced
-			- eg: `<a href="{OVER}">{NEWTITLE}</a>` might be replaced with
-			- `<a href="{/unskimmed/swordmanship/yeller/over-will-oghuz}">Over Will Oghuz</a>`
-		- `{LINK}` and `{OVER}` tags that aren't paired with a `{NEWTITLE}` may misalign subsequent paired tags
-
+		- If this tag follows a `{LINK}` or `{OVER}` tag, the title and url will be synced
+          - eg: `<a href="{OVER}">{NEWTITLE}</a>` might be replaced with `<a href="/swordmanship/yeller/over-will-oghuz">Over Will Oghuz</a>`
+          - Tags are evaluated forwards through the template. A `{NEWTITLE}` tag will search backwards for the closest `{LINK}` or `{OVER}` tag to sync with.
+            - Tags will always pair correctly when any `{LINK}` or `{OVER}` tag is immediately followed by its `{NEWTITLE}` tag, if a `{NEWTITLE}` is desired
 
 ## Images
 

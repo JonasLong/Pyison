@@ -25,13 +25,33 @@ def get_html(url, config: Config):
     # `<div><a href="{LINK}">{NEWTITLE}</a></div>`
     # elements a url to match their title text
     while "{NEWTITLE}" in res:
-        segment = res[:res.index("{NEWTITLE}")]
+        #segment = res[:res.index("{NEWTITLE}")]
+        title_pos = res.index("{NEWTITLE}")
         title = text_source.getTitle()
-        link = text_source.getLinkForTitle(title)
-        segment = segment.replace("{LINK}", link, 1)
-        segment = segment.replace("{OVER}", link, 1)
-        res = segment + res[res.index("{NEWTITLE}"):]
-        res = res.replace("{NEWTITLE}", title, 1)
+
+        segment=res
+
+        link_pos = segment.rfind("{LINK}", 0, title_pos)
+        over_pos = segment.rfind("{OVER}", 0, title_pos)
+
+        if link_pos != -1 or over_pos != -1:  # Give the closest {LINK} or {OVER} tag a title
+            if link_pos > over_pos:
+                # Substituting a {LINK} tag
+                link = text_source.getLinkForTitle(title)
+                segment = segment[link_pos:title_pos].replace("{LINK}", link, 1)
+            else:
+                # Substituting an {OVER} tag
+                over_link = text_source.getSiblingForTitle(url, title)
+                segment = segment[over_pos:title_pos].replace("{OVER}", over_link, 1)
+
+            #res = segment + res[res.index("{NEWTITLE}"):]
+            tag_pos=max(link_pos, over_pos)
+            #print("seg=",segment)
+            res = res[0:tag_pos] + segment + res[title_pos:]
+            #print("res=",res)
+            res = res.replace("{NEWTITLE}", title, 1)
+            print(res)
+
 
     # Dynamic text substitution
     # each occurrence of {WORD} will be replaced with its own random words

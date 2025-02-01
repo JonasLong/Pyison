@@ -140,7 +140,10 @@ class Generator:
         return self.getPath() + "/" + self.escapePageName(title)
 
     def getSiblingLink(self, url: str):
-        return self.getPage()
+        return self.getParentLink(url) + "/" + self.getPage()
+
+    def getSiblingForTitle(self, url: str, title: str):
+        return self.getParentLink(url) + "/" + self.escapePageName(title)
 
     def getParentLink(self, url: str):
         # return ".."
