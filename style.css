@@ -1,0 +1,48 @@
+body {
+    background:lightyellow;
+}
+
+.navbar {
+    display:flex;
+    column-gap:10px;
+    background: lightgreen;
+}
+
+.navbar a {
+}
+
+
+
+#nav-break {
+width: 10px;
+background:black;
+}
+
+#image-rail-neoj{
+    width:100%;
+    align-items:center;
+    display:grid;
+}
+
+.pinch {
+    width:50%;
+    align-self:center;
+    justify-self:center;
+    aspect-ratio:1280/720;
+}
+
+#author-profile {
+    height:30%;
+    width:30%;
+    border-radius:30%
+}
+
+h2 {
+    padding-left:5px;
+}
+h3 {
+    padding-left:10px;
+}
+h4 {
+    padding-left:15px;
+}
