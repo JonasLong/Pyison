@@ -52,19 +52,25 @@ Pyison is a tarpit for AI webcrawlers
   ### Docker
   
 	#### With docker compose
-	- clone the repository locally
-	- TODO: docker package
+	- Make a new docker-compose.yml file containing
+	```services:
+  pysion:
+    image: "ghcr.io/j0hnl0cke/pyison:main"
+    container_name: pyison
+    tty: true
+    ports:
+      - 80:80```
 	- `docker compose up`
-	- optional use the: `-d` flag
+	- (Optional) Use the `-d` flag to detach from the container
 	
 	#### With docker run
-	- TODO: docker package
-	- `docker run --tty --name pyison -p "127.0.0.1:8000:80" --rm pyison:latest`
+	- `docker run --tty --name pyison -p "127.0.0.1:80:80" --rm ghcr.io/j0hnl0cke/pyison:main`
+	  - (Optional) Remove the `--rm` flag to persist the container
     
 	#### Building
-	- clone the repository locally
+	- Clone the repository locally
 	- `docker build -t pyison:latest .`
-	- `docker run --tty --name pyison -p "127.0.0.1:8000:80" --rm pyison:latest`
+	- Run the container with one of the methods above
 
 It is **highly recommended** that you use a reverse proxy to serve this content. It can reduce server load by caching pages and introducing ratelimits, as well as serve the content over https and protect from some basic webserver exploits.
   ### Reverse Proxy
