@@ -50,7 +50,21 @@ Pyison is a tarpit for AI webcrawlers
 		- Open `http://localhost:<your port number>` in a browser
 
   ### Docker
-	Coming soon
+  
+	#### With docker compose
+	  - clone the repository locally
+	  - TODO: docker package
+	  - `docker compose up`
+	  - optional use the: `-d` flag
+	
+	#### With docker run
+	  - TODO: docker package
+	  - `docker run --tty --name pyison -p "127.0.0.1:8000:80" --rm pyison:latest`
+    
+    #### Building
+	  - clone the repository locally
+	  - `docker build -t pyison:latest .`
+	  - `docker run --tty --name pyison -p "127.0.0.1:8000:80" --rm pyison:latest`
 
 It is **highly recommended** that you use a reverse proxy to serve this content. It can reduce server load by caching pages and introducing ratelimits, as well as serve the content over https and protect from some basic webserver exploits.
   ### Reverse Proxy

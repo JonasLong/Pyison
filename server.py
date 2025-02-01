@@ -2,7 +2,6 @@ from http.server import HTTPServer
 from handler import Handler
 from config import Config
 from functools import partial
-import nltk
 
 def run(config:Config):
     print("Listening on port {}".format(config.port))
@@ -13,7 +12,6 @@ def run(config:Config):
 
 
 def main():
-    nltk.download("words")
     config = Config()
     if config.random_seed == 0:
         print("Please update the random seed value in the config file!")

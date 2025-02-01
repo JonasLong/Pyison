@@ -1,0 +1,9 @@
+services:
+  pysion:
+    build: https://github.com/J0hnL0cke/Pyison/tree/main:latest
+    container_name: pyison
+    tty: true
+    volumes:
+      - ./:/var/www # mount the current folder at container root
+    ports:
+      - 80:80
