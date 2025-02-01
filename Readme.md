@@ -21,7 +21,7 @@
 					- Supports but doesn't require reverse proxies/specific webservers, provides sub-path configuration with a document root setting
 				- Running with a small footprint rather than an entire CMS or feature-rich webserver
 	
-	- # Technical Specifications
+	- ## Technical Specifications
 		- This project runs a dynamic web server using Python's HTTPServer library
 		- Sentences are produced from a 50/50 mix between random english words and "stop words"
 		- Pyison uses a global salt as well as a page url to seed its RNG. This ensures that if crawlers ever perform a "sanity check" by reloading a page, it will be the same as the last time they checked it. At the same time, different servers should use different global seeds so that not all sites using Pyison look the same.
@@ -31,38 +31,38 @@
 		- Pyison responds to errant POST and PUT requests with a 404 in case crawlers test that those HTTP verbs are configured
 
 	- ## Getting Started
-	- Clone this project to a local folder
-	- Change settings in the `config.json` file
-		- Set the `random-seed` to a random number!
-		- Set the `port` number for the server to use
-	- (Optional but recommended) Update the HTML template, CSS, images, and robots.txt to your liking
-		- This project is more effective if pages look different, which can be done by varying the HTML and CSS structure. Rearrange and rename some stuff, or rewrite it completely.
-	- (Optional) Edit the robots.txt if you want to capture more bots
+		- Clone this project to a local folder
+		- Change settings in the `config.json` file
+			- Set the `random-seed` to a random number!
+			- Set the `port` number for the server to use
+		- (Optional but recommended) Update the HTML template, CSS, images, and robots.txt to your liking
+			- This project is more effective if pages look different, which can be done by varying the HTML and CSS structure. Rearrange and rename some stuff, or rewrite it completely.
+		- (Optional) Edit the robots.txt if you want to capture more bots
+		
+		- ### Running locally
+			- Install nltk
+				- `pip install nltk`
+			- Run Pyison
+				- `python3 server.py`
+			- Check it's running
+				- Open `http://localhost:<your port number>` in a browser
+		
+		- ### Docker
+			Coming soon
 	
-	- ### Running locally
-		- Install nltk
-			- `pip install nltk`
-		- Run Pyison
-			- `python3 server.py`
-		- Check it's running
-			- Open `http://localhost:<your port number>` in a browser
-	
-	- ### Docker
-		- Coming soon
-
-	- It is **highly recommended** that you use a reverse proxy to serve this content. It can reduce server load by caching pages and introducing ratelimits, as well as serve the content over https and protect from some basic webserver exploits.
-		- ### Reverse Proxy
-			- Nginx Proxy Manager
-				-
-				  ```
-				  location / {
-				  	proxy_pass http://localhost:80;
-				      proxy_buffering off;
-				  	proxy_pass_header User-Agent;
-				  }
-				  ```
-				- Set "80" to whatever port is defined in the config
-				- If you're using a docker network, replace "localhost" with the Pyison container's name
+		- It is **highly recommended** that you use a reverse proxy to serve this content. It can reduce server load by caching pages and introducing ratelimits, as well as serve the content over https and protect from some basic webserver exploits.
+			- ### Reverse Proxy
+				- Nginx Proxy Manager
+					-
+					  ```
+					  location / {
+					  	proxy_pass http://localhost:80;
+					      proxy_buffering off;
+					  	proxy_pass_header User-Agent;
+					  }
+					  ```
+					- Set "80" to whatever port is defined in the config
+					- If you're using a docker network, replace "localhost" with the Pyison container's name
 
 	- ## Configuration
 		- The config.json file defines various settings for easy customization:
