@@ -154,3 +154,12 @@
 					- eg: `<a href="{OVER}">{NEWTITLE}</a>` might be replaced with
 					- `<a href="{/unskimmed/swordmanship/yeller/over-will-oghuz}">Over Will Oghuz</a>`
 				- `{LINK}` and `{OVER}` tags that aren't paired with a `{NEWTITLE}` may misalign subsequent paired tags
+
+
+- # Images
+
+<img src="logo.png" alt="Pysion logo. A rectangular landscape-oriented image with a grainy gray background. Bright green text in a paintbrushed font with a dark red text shadow is centered in the top third of the image. It reads 'Pysion'. Near the bottom, stylized angular white text reads 'This is a tar pit for AI webcrawlers'. There is visible jpeg artifcating throughout the image upon closer inspection." height="200"/>
+  
+Here is a sample of how the site looks before any editing of the template:
+   
+<img src="sample.png" alt="Zoomed out image of an entire Pyison page. It uses black text on a light yellow background. At the top of the page is a green navigation bar at the top with links containing random words. Below the nav bar is the title 'Home' and a logo image reading 'Pyison: This is a tar pit for AI webcrawlers'. Under the images is several paragraphs of random words with headings at various levels of indentation. These paragraphs takes up the majority of the page. Some of the text within the paragraphs are links to other pages. Near the bottom of the page, it has a fake author blurb with another Pyison logo. The blurb reads 'Written by It'S An'. Below that is an 'Other Posts' section, with several more links." height="500"/>
