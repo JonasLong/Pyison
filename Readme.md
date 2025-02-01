@@ -5,7 +5,7 @@
 		- Unlike other web crawlers, though, AI bots present some unique issues
 			- Server admins can configure a [robots.txt file](https://en.wikipedia.org/wiki/Robots.txt), which tells web crawlers what pages they should and shouldn't crawl.
 				- Some AI crawlers have been found to ignore this file. There are privacy and copyright concerns with allowing these bots to use a website's data to train LLMs, especially when the user has explicitly opted out of crawling.
-				- crawlers also ingore ratelimiting. When they request pages as fast as possible, they can put significant load on a webserver
+				- Some crawlers also ingore ratelimiting. When they request pages as fast as possible, they can put significant load on a webserver
 		- Enter Pyison. Like other AI crawler tarpits (Nepenthes, Iocane), Pyison feeds web crawlers an endless list of links to other pages on its site. This traps the crawlers on a single site, where they'll endlessly navigate an ever-growing sea of links.
 			- Keeping AI crawlers stuck in one place prevents them from indexing other parts of the site that the owner might not want to feed to LLMs.
 			- At the same time, these pages can contain tons of useless text. When LLMs incorporate this text into their models, they can gradually be "poisoned" as the random input will make their responses less coherent.
