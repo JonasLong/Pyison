@@ -53,13 +53,15 @@ Pyison is a tarpit for AI webcrawlers
   
 	#### With docker compose
 	- Make a new docker-compose.yml file containing
-	```services:
-  pysion:
-    image: "ghcr.io/j0hnl0cke/pyison:main"
-    container_name: pyison
-    tty: true
-    ports:
-      - 80:80```
+	```yaml
+  services:
+    pysion:
+       image: "ghcr.io/j0hnl0cke/pyison:main"
+       container_name: pyison
+       tty: true
+       ports:
+         - 80:80
+ 	```
 	- `docker compose up`
 	- (Optional) Use the `-d` flag to detach from the container
 	
