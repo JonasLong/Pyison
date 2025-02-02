@@ -50,7 +50,7 @@ def get_html(url, config: Config):
             res = res[0:tag_pos] + segment + res[title_pos:]
             #print("res=",res)
             res = res.replace("{NEWTITLE}", title, 1)
-            print(res)
+            #print(res)
 
 
     # Dynamic text substitution
