@@ -1,9 +1,11 @@
 services:
-  pysion:
+  pyison:
     image: ghcr.io/j0hnl0cke/pyison:main
     container_name: pyison
     tty: true
     #volumes:
-    #  - ./:/var/www # mount the current folder at container root
+    #  - ./:/var/www # bind mount the current folder to the container's /var/www/ directory
+    #environment:
+    #  - TZ= # specify a timezone to use when logging requests
     ports:
       - 80:80

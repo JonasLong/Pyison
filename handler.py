@@ -104,7 +104,7 @@ class Handler(BaseHTTPRequestHandler):
     def getCatch(self):
         print("Caught something in document root!")
         print("User-Agent:", self.headers.get("User-Agent"))
-        print("IP:", self.headers.get("Host"))
+        print("IP: {}:{}".format(self.client_address[0], self.client_address[1]))
         # Can print more client specs here, or print all of headers.items()
 
     def get_html(self, url):
