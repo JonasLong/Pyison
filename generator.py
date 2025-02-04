@@ -153,7 +153,7 @@ class Generator:
 
     def getSubpath(self, new_dir: str):
         parent = path.join(self.doc_root.path, new_dir)
-        return self.getLink().replace(self.doc_root.path, parent)
+        return self.getLink().replace(self.doc_root.path, parent, 1)
 
     def getLinkForTitle(self, title: str):
         return path.join(self.getPath(), self.escapePageName(title))
