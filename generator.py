@@ -142,7 +142,10 @@ class Generator:
         return self.escapePageName(self.removeUnsafeChars(self.getTitle()))
 
     def getPath(self):
-        new_url = self.doc_root.path  # need doc root to provide sub-paths correctly
+        return self._genUrl(self.doc_root.path)  # need doc root to provide sub-paths correctly
+
+    def _genUrl(self, parent):
+        new_url = parent
         for i in range(self.rnd.randint(1, 4)):
             new_url = path.join(new_url, self.getWord())
             # use getPage() instead of getWord() for multi-word paths
@@ -152,8 +155,7 @@ class Generator:
         return path.join(self.getPath(), self.getPage())
 
     def getSubpath(self, new_dir: str):
-        parent = path.join(self.doc_root.path, new_dir)
-        return self.getLink().replace(self.doc_root.path, parent, 1)
+        return self._genUrl(path.join(self.doc_root.path, new_dir))
 
     def getLinkForTitle(self, title: str):
         return path.join(self.getPath(), self.escapePageName(title))
