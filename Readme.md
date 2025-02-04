@@ -115,10 +115,10 @@ Pyison is a tarpit for AI webcrawlers
     - You'll only need to change this if you're using a reverse proxy and serving to a sub-directory
         - If so, use either a fully-qualified path or one relative to the root
             - ie `https://example.com/pyison/` or `/pyison/`
-- `fake-image-dir` (default ["/images"])
+- `fake-image-dir` (default ["images"])
     - All images will appear to be served from this path
     - Accepts either a single string, or a list of options to randomly choose from
-- `fake-css-dir` (default ["/css"])
+- `fake-css-dir` (default ["css"])
     - All css files will appear to be served from this path
     - Accepts either a single string, or a list of options to randomly choose from
 - `spacing-characters` (default ["_","-","%20"])
@@ -149,6 +149,8 @@ Pyison is a tarpit for AI webcrawlers
 - Before serving your HTML file(s), Pyison will substitue some preset tags with its own values
   ### Static values
     When one of these tags is specified multiple times in the template, each value will be the same
+    - `{HOME}`
+        - Link to the document root, as defined in the config
     - `{TITLE}`
         - Title text of the page, based on the current URL
             - ex '/blog/about/once-upon-a-time' -> 'Once Upon A Time'

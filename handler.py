@@ -1,11 +1,10 @@
-from http.server import BaseHTTPRequestHandler
 from functools import cached_property
 from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler
-from urllib.parse import parse_qsl, urlparse
+from urllib.parse import parse_qsl
 from config import Config
 import wrapper
-import textwrap
+from urllib.parse import urlparse, urljoin
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -20,7 +19,9 @@ class Handler(BaseHTTPRequestHandler):
 
     @cached_property
     def url(self):
-        return urlparse(self.path)
+        url = urlparse(self.path)
+        return url
+
 
     @cached_property
     def query_data(self):
@@ -49,69 +50,88 @@ class Handler(BaseHTTPRequestHandler):
         self.send_response(404)
 
     def do_GET(self):
-        url = self.url.geturl()
-        # print('GET request for url "{}"'.format(textwrap.shorten(url, width=50)), end="- ")
 
-        stripped = url.strip("/")
+        if not (self.url.path.startswith(self.cfg.doc_root.path) or self.url.geturl().startswith(self.cfg.doc_root.path)):
+            # initial URL validation checks
+            print("Invalid request! Not in document root")
+            self.send_response(500)
+            return
 
-        if stripped == "" or stripped == self.cfg.doc_root:
-            # Request to the homepage, so print info about this client
-            self.getCatch()
-
-        elif url.strip("/") == "robots.txt":
-            if self.cfg.robots_txt != "":
-                self.send_response(200)
-                self.send_header("Content-Type", "gzip")
-                self.wfile.write(self.load_binary(self.cfg.robots_txt))
-                return
-            else:
-                self.send_response(404)
-
-        if len(url) > 4 and url[-4] == ("."):
-            # return a file
-            if url.endswith(".ico"):
-                cnt = "image/vnd.microsoft.icon"
-                ext = "ico"
-            elif url.endswith(".jpg"):
-                cnt = "image/jpeg"
-                ext = "jpg"
-            elif url.endswith(".png"):
-                cnt = "image/png"
-                ext = "png"
-            elif url.endswith(".css"):
-                cnt = "text/css"
-                ext = "css"
-            else:
-                self.send_response(404)
-                print("served 404")
-                return
-
-            self.send_response(200)
-            self.send_header("Content-Type", cnt)
-            self.end_headers()
-            file_options = Handler.getCfg().name_by_ext(ext)  # Get possible files to send from the config
-            # print("options:", file_options)
-            chosen_file = wrapper.chooseItem(url, file_options, Handler.getCfg())  # Choose one at random
-            print("served {}".format(chosen_file))
-            self.wfile.write(self.load_binary(chosen_file))  # Send to client
         else:
-            self.send_response(200)
-            # serve plain HTML
-            self.send_header("Content-Type", "text/html")
-            self.end_headers()
-            self.wfile.write(self.get_html(url).encode("utf-8"))
+            url = urlparse(self.url.geturl())
+            # print('GET request for url "{}"'.format(textwrap.shorten(url, width=50)), end="- ")
 
-    def getCatch(self):
+            doc_root = self.cfg.doc_root
+
+            if url == doc_root:
+                # Request to the homepage, so print info about this client
+                self.logCatch()
+                # Continue to serve content
+
+            url_path = url.path
+            if len(url_path) > 4 and url_path[-4] == ".":
+                # Handle file extensions (.txt, .jpg, etc)
+                if url == urljoin(doc_root.path, "robots.txt"):
+                    return self.getRobots()
+                else:
+                    self.getFile(url_path)
+            else:
+                # serve plain HTML
+                self.get_html(url)
+
+    def logCatch(self):
         print("Caught something in document root!")
         print("User-Agent:", self.headers.get("User-Agent"))
         print("IP: {}:{}".format(self.client_address[0], self.client_address[1]))
         # Can print more client specs here, or print all of headers.items()
 
+    def getFile(self, url_path):
+        # return a file
+        if url_path.endswith(".ico"):
+            cnt = "image/vnd.microsoft.icon"
+            ext = "ico"
+        elif url_path.endswith(".jpg"):
+            cnt = "image/jpeg"
+            ext = "jpg"
+        elif url_path.endswith(".png"):
+            cnt = "image/png"
+            ext = "png"
+        elif url_path.endswith(".css"):
+            cnt = "text/css"
+            ext = "css"
+        else:
+            self.send_response(404)
+            print("served 404")
+            return
+
+        self.send_response(200)
+        self.send_header("Content-Type", cnt)
+        self.end_headers()
+        file_options = Handler.getCfg().name_by_ext(ext)  # Get possible files to send from the config
+        # print("options:", file_options)
+        chosen_file = wrapper.chooseItem(self.url, file_options, Handler.getCfg())  # Choose one at random
+        print("served {}".format(chosen_file))
+        self.wfile.write(self.load_binary(chosen_file))  # Send to client
+
+    def getRobots(self):
+        if self.cfg.robots_txt != "":
+            self.send_response(200)
+            self.send_header("Content-Type", "gzip")
+            self.wfile.write(self.load_binary(self.cfg.robots_txt))
+            return
+        else:
+            self.send_response(404)
+
     def get_html(self, url):
-        # return "<html><head></head><body>hi</body></html>"
-        x = wrapper.get_html(url, Handler.getCfg())
-        print("served html with {} chars".format(len(x)))
-        return x
+        self.send_response(200)
+        self.send_header("Content-Type", "text/html")
+        self.end_headers()
+
+        # generate HTML
+        # page = "<html><head></head><body>hi</body></html>"
+        page = wrapper.get_html(url, Handler.getCfg())
+        print("served html with {} chars".format(len(page)))
+        self.wfile.write(page.encode("utf-8"))
 
     def load_binary(self, filename):
         with open(filename, 'rb') as file_handle:

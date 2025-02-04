@@ -1,4 +1,5 @@
 import json
+from urllib.parse import urlparse
 
 
 class Config:
@@ -25,7 +26,7 @@ class Config:
 
     @property
     def doc_root(self):
-        return self.opts["document-root"]
+        return urlparse(self.opts["document-root"])
 
     @property
     def non_stop_wrds(self):

@@ -3,8 +3,8 @@
   "random-seed": 0,
   "document-root": "/",
 
-  "fake-image-dir": ["/images"],
-  "fake-css-dir": ["/css"],
+  "fake-image-dir": ["images"],
+  "fake-css-dir": ["css"],
 
   "spacing-characters": ["_","-","%20"],
   "unsafe-characters": ["'","`"],

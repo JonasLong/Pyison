@@ -1,23 +1,27 @@
 import random
+
 import nltk
 from nltk.corpus import words, stopwords
 import random as _global_rand
 from config import Config
+from urllib.parse import ParseResult
+import posixpath as path
 
 
 class Generator:
     word_list = words.words()
     stop_list = None
 
-    def __init__(self, url, cfg: Config):
+    def __init__(self, url: ParseResult, cfg: Config):
         # The random seed is a combination of the url hash and the global seed (salt) specified in the config
         # Using the URL means that a crawler doing a "sanity check" by re-requesting a page
         # will be given the exact same data, as if it were a static resource
-        self.rnd = _global_rand.Random(hash(url) + int(cfg.random_seed))
+        self.rnd = _global_rand.Random(hash(url.path) + int(cfg.random_seed))
         self.stop_list = Generator.get_stopwords(cfg)
         self.doc_root = cfg.doc_root
         self.spacings = cfg.spacing
         self.unsafeChars = cfg.unsafe_chars
+        self.url = url
 
     @classmethod
     def get_stopwords(cls, cfg: Config):
@@ -29,9 +33,8 @@ class Generator:
                 if i in cls.stop_list:
                     cls.stop_list.remove(i)
             print("Prepared stop words list")
-            #print(cls.stop_list)
+            # print(cls.stop_list)
         return cls.stop_list
-
 
     def debug(self):
         print(len(self.word_list))
@@ -50,17 +53,17 @@ class Generator:
         return self.rnd.choice(self.word_list if self.getBool() else self.stop_list)
 
     def getSentence(self):
-        sentence = " ".join(self.getWord() for i in range(self.rnd.randint(3, 20)))
+        sentence = " ".join(self.getWord() for _ in range(self.rnd.randint(3, 20)))
         return sentence.capitalize() + "."
 
     def getTitle(self):
-        return " ".join(self.getWord() for i in range(self.rnd.randint(1, 7)))
+        return " ".join(self.getWord() for _ in range(self.rnd.randint(1, 7)))
 
     def getPara(self):
-        return " ".join(self.getSentence() for i in range(self.rnd.randint(15, 20)))
+        return " ".join(self.getSentence() for _ in range(self.rnd.randint(15, 20)))
 
     def getHeader(self):
-        return " ".join(self.getWord().capitalize() for i in range(self.rnd.randint(1, 3)))
+        return " ".join(self.getWord().capitalize() for _ in range(self.rnd.randint(1, 3)))
 
     def getName(self):
         return (self.getWord() + " " + self.getWord()).title()
@@ -74,7 +77,7 @@ class Generator:
             words[end] = words[end] + "</a>"
         return " ".join(words)
 
-    def getMainHTML(self, url):
+    def getMainHTML(self):
         level = 1
         content = ""
         for i in range(self.rnd.randint(3, 25)):
@@ -85,7 +88,7 @@ class Generator:
                     level -= 1
                 level = (level % 4) + 1
             content += "<h{0}>{1}</h{0}>\n<p>{2}</p>\n".format(
-                str(level), self.getHeader(), self.addLinksToText(url, self.getPara()))
+                str(level), self.getHeader(), self.addLinksToText(self.url, self.getPara()))
 
         # print("done content")
         return content
@@ -96,65 +99,80 @@ class Generator:
         spacer = self.rnd.choice(self.spacings)
         return self.removeUnsafeChars(title.replace(" ", spacer)).lower()
 
-    def unescapePageName(self, url: str):
+    def unescapePageName(self):
         """Turns a URL back into a title
         ex: '/blog/about/once-upon-a-time' -> 'Once Upon A Time'"""
-        url = url.strip("/")
-        if url == "": #or url == self.doc_root: # don't use doc root- sub-path isn't Home
-            return "Home"
-        if "/" in url:
-            url = url[url.rfind("/") + 1:]
-        return self.revertURLSpacing(url.title())
 
-    def revertURLSpacing(self, url:str):
+        url_path = self.url.path
+
+        dirs = path.dirname(url_path)
+        file = path.basename(url_path)
+
+        if self._isDocRoot():
+            # This is the Home directory
+            return "Home"
+        else:
+            return self._reintroduceSpacingToPage(file)
+
+    def _reintroduceSpacingToPage(self, url_page: str):
+        title = url_page
         for i in self.spacings:
-            url = url.replace(i, " ")
-        return url
+            title = title.replace(i, " ")
+        return title
 
     def removeUnsafeChars(self, txt: str):
         for i in self.unsafeChars:
             txt = txt.replace(i, "")
         return txt
 
-    def getParentPageName(self, url):
-        return self.unescapePageName(self.getParentLink(url))
+    def getParentPageName(self):
+        # Returns the unescaped name of the parent url in the heiarchy
+
+        url_path = self.url.path
+
+        dirs = path.dirname(url_path)
+        parent_file = path.basename(dirs)
+
+        return self._reintroduceSpacingToPage(parent_file)
 
     def getPathForTitle(self, title):
-        return self.getPath() + "/" + self.escapePageName(title)
+        return path.join(self.getPath(), self.escapePageName(title))
 
     def getPage(self):
         return self.escapePageName(self.removeUnsafeChars(self.getTitle()))
 
     def getPath(self):
-        new_url = ""
+        new_url = self.doc_root.path  # need doc root to provide sub-paths correctly
         for i in range(self.rnd.randint(1, 4)):
-            new_url += self.doc_root + self.getWord() # need doc root to provide sub-paths correctly
-            # new_url += self.doc_root + self.getPage() # for multi-word paths
-        # new_url = new_url[:-1]
+            new_url = path.join(new_url, self.getWord())
+            # use getPage() instead of getWord() for multi-word paths
         return self.removeUnsafeChars(new_url)
 
     def getLink(self):
-        return self.getPath() + "/" + self.getPage()
+        return path.join(self.getPath(), self.getPage())
+
+    def getSubpath(self, new_dir: str):
+        parent = path.join(self.doc_root.path, new_dir)
+        return self.getLink().replace(self.doc_root.path, parent)
 
     def getLinkForTitle(self, title: str):
-        return self.getPath() + "/" + self.escapePageName(title)
+        return path.join(self.getPath(), self.escapePageName(title))
 
-    def getSiblingLink(self, url: str):
-        return self.getParentLink(url) + "/" + self.getPage()
+    def _isDocRoot(self):
+        return self.url == self.doc_root
 
-    def getSiblingForTitle(self, url: str, title: str):
-        return self.getParentLink(url) + "/" + self.escapePageName(title)
+    def getSiblingLink(self):
+        parent = self.getParentLink()
+        return path.join(parent, self.getPage())
 
-    def getParentLink(self, url: str):
-        # return ".."
-        url = url.strip("/")
-        if "/" in url:
-            # shouldn't need to reference doc root. Parent will still be a valid path,
-            # just not controlled by this webserver
-            page = url[:url.rfind("/")]
-            return "/" + page
+    def getSiblingForTitle(self, title: str):
+        return path.join(self.getParentLink(), self.escapePageName(title))
+
+    def getParentLink(self):
+        if self._isDocRoot():
+            return self.url.path
         else:
-            return "/"
+            return path.dirname(self.url.path)
 
     def chooseItem(self, lst: list):
         if len(lst) == 1:
@@ -163,11 +181,13 @@ class Generator:
 
 
 def main():
-    g = Generator(None, Config())
+    cfg = Config()
+    g = Generator(cfg.doc_root, cfg)
     g.debug()
 
 
 if __name__ == '__main__':
+    # Runs a testing script
     print("start")
     nltk.download("words")
     main()
