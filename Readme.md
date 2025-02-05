@@ -81,8 +81,8 @@ Pyison is a tarpit for AI webcrawlers
 
   ### Reverse Proxy
   It is **highly recommended** that you use a reverse proxy to serve this content. It can reduce server load by caching pages and introducing ratelimits, as well as serve the content over https and protect from some basic webserver exploits.
-  - #### Nginx Proxy Manager
-      
+  
+  - #### Nginx Proxy Manager: Independent Subdomain Configuration
     - Enter the following settings in the UI, or type the equivalent settings in the NPM configuration file:
     <img src="Proxy Host config.png" alt='The NGINX Reverse Proxy interface. The "Edit Proxy Host dialogue is open.' height="300"/>
 
@@ -93,15 +93,35 @@ Pyison is a tarpit for AI webcrawlers
       - Enable `Cache Assets` and `Block Common Exploits`, but not `Websockets Support`
     - Pyison supports NPM's strictest SSL settings
     - The `User-Agent` http header should be relayed from NPM to the pyison server with the default settings, else use `proxy_pass_header User-Agent;`
-    - To use Pyison in a sub-path, use the following location configuration, replacing `/root/path` with the desired path
+  
+  - #### Nginx Proxy Manager: Sub-path Configuration
+    - To use Pyison in a sub-path, use the following location configuration
       ```Nginx
-      location /root/path {
+      # Handles the root page ("example.com/tarpit")
+      location /tarpit {
           proxy_pass http://localhost:80;
-          proxy_set_header Host $host;
-          proxy_buffering off;
+      }
+
+      # Handles all sub-pages ("example.com/tarpit/a" and "example.com/tarpit/a/b")
+      location /tarpit/ {
+          proxy_pass http://pyison:80;
+      }
+
+      # Handles all urls with a 3-letter file extension ("example.com/tarpit/style.css" and "example.com/tarpit/images/picture.jpg")
+      # Note that the ~ denotes regex matching. The string immediately following it must be a valid regex statement.
+      location ~ .*\/tarpit\/.*\....$ {  
+          proxy_pass http://localhost:80;
       }
       ```
-      - Also remember to update Pyison's `document-root` setting accordingly (see the [Configuration](#configuration) section)
+    - Here is a working setup using the UI:
+      <img src="Proxy Host sub-path config.png" alt='The NGINX Reverse Proxy interface. The "Edit Proxy Host dialogue is open to the "Custom locations" tab.' height="400"/>
+      - The first location block, `/tarpit`, has no custom configuration. It will behave like the first location block defined above.
+      - The second location block, `/tarpit/`, contains the second and third location blocks defined above
+    - Replace `tarpit` with the desired path.
+      - If using further sub-paths like `/tar/pit`, note that the third location block uses regex, so any slashes must be escaped with a backslash
+        - eg: `/tar/pit` would require `location ~ .*\/tar\/pit\/.*\....$` in the 3rd location block
+      - Update Pyison's `document-root` setting accordingly (see the [Configuration](#configuration) section)
+    - See [above](#nginx-proxy-manager-independent-subdomain-configuration) for further configuration of host, ports, SSL, etc
 
 ## Configuration
 - The config.json file defines various settings for easy customization:
