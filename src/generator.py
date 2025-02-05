@@ -112,7 +112,7 @@ class Generator:
             # This is the Home directory
             return "Home"
         else:
-            return self._reintroduceSpacingToPage(file)
+            return self._reintroduceSpacingToPage(file).title()
 
     def _reintroduceSpacingToPage(self, url_page: str):
         title = url_page

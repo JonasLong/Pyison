@@ -180,7 +180,7 @@ Pyison is a tarpit for AI webcrawlers
         - Link to the document root, as defined in the config
     - `{TITLE}`
         - Title text of the page, based on the current URL
-            - ex '/blog/about/once-upon-a-time' -> 'Once Upon A Time'
+            - ex `/blog/about/once-upon-a-time` -> `Once Upon A Time`
     - `{UPTITLE}`
         - Title text of the parent page, generated from the current URL
     - `{MAIN}`
@@ -216,7 +216,7 @@ Pyison is a tarpit for AI webcrawlers
     - `{NEWTITLE}`
         - Generates a random title
         - Uses a series of random words in Title Capitalization
-        - eg: 'Nectarial Electrofusion Which Dephosphorization'
+        - eg: `Nectarial Electrofusion Which Dephosphorization`
         - If this tag follows a `{LINK}` or `{OVER}` tag, the title and url will be synced
           - eg: `<a href="{OVER}">{NEWTITLE}</a>` might be replaced with `<a href="/swordmanship/yeller/over-will-oghuz">Over Will Oghuz</a>`
           - Tags are evaluated forwards through the template. A `{NEWTITLE}` tag will search backwards for the closest `{LINK}` or `{OVER}` tag to sync with.
