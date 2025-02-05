@@ -120,7 +120,7 @@ Pyison is a tarpit for AI webcrawlers
     - Replace `tarpit` with the desired path.
       - If using further sub-paths like `/tar/pit`, note that the third location block uses regex, so any slashes must be escaped with a backslash
         - eg: `/tar/pit` would require `location ~ .*\/tar\/pit\/.*\....$` in the 3rd location block
-      - Update Pyison's `document-root` setting accordingly (see the [Configuration](#configuration) section)
+    - Update Pyison's `document-root` setting with the sub-path used by the proxy (see the [Configuration](#configuration) section)
     - See [above](#nginx-proxy-manager-independent-subdomain-configuration) for further configuration of host, ports, SSL, etc
 
 ## Configuration
