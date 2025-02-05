@@ -71,7 +71,7 @@ class Handler(BaseHTTPRequestHandler):
             url_path = url.path
             if len(url_path) > 4 and url_path[-4] == ".":
                 # Handle file extensions (.txt, .jpg, etc)
-                if url == urljoin(doc_root.path, "robots.txt"):
+                if url.path == urljoin(doc_root.path, "robots.txt"):
                     return self.getRobots()
                 else:
                     self.getFile(url_path)
@@ -120,7 +120,9 @@ class Handler(BaseHTTPRequestHandler):
     def getRobots(self):
         if self.cfg.robots_txt != "":
             self.send_response(200)
-            self.send_header("Content-Type", "gzip")
+            #self.send_header("Content-Encoding", "gzip")
+            self.send_header("Content-Type", "text/plain")
+            self.end_headers()
             self.wfile.write(self.load_binary(self.cfg.robots_txt))
             return
         else:

@@ -9,7 +9,7 @@
   "spacing-characters": ["_","-","%20"],
   "unsafe-characters": ["'","`"],
 
-  "robots-txt": "robots.txt",
+  "robots-txt": "assets/robots.txt",
   "html-templates": ["assets/template.html"],
   "css-files": ["assets/style.css"],
   "images": {
