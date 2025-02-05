@@ -58,7 +58,7 @@ Pyison is a tarpit for AI webcrawlers
     - Make a bare-minimum [docker-compose.yml](docker-compose.yml) file containing
       ```yaml
       services:
-        pysion:
+        pyison:
           image: "ghcr.io/j0hnl0cke/pyison:main"
           container_name: pyison
           tty: true
@@ -76,26 +76,31 @@ Pyison is a tarpit for AI webcrawlers
     #### Building from source
     - Clone the repository locally
     - `docker build -t pyison:latest .`
-    - Run the container with `docker run --tty --name pyison -p "127.0.0.1:80:80" --rm pysion:latest`
+    - Run the container with `docker run --tty --name pyison -p "127.0.0.1:80:80" --rm pyison:latest`
 
 
-  ### Reverse Proxy
+## Reverse Proxy
   It is **highly recommended** that you use a reverse proxy to serve this content. It can reduce server load by caching pages and introducing ratelimits, as well as serve the content over https and protect from some basic webserver exploits.
+    
+  ### Considerations
+  - These examples use Nginx Proxy Manager, but any reverse proxy software should work
+  - Pyison supports NPM's strictest SSL settings
+  - NPM *should* pass the `User-Agent` http header from NPM to the Pyison server without any special configuration. Use `proxy_pass_header User-Agent;` if needed.
+
+  ### Independent Subdomain Configuration
+  - Select the following settings in the UI, or enter the equivalent settings in the configuration file:
   
-  - #### Nginx Proxy Manager: Independent Subdomain Configuration
-    - Enter the following settings in the UI, or type the equivalent settings in the NPM configuration file:
     <img src="Proxy Host config.png" alt='The NGINX Reverse Proxy interface. The "Edit Proxy Host dialogue is open.' height="300"/>
 
       - Domain Names: A domain or subdomain you control, like `tarpit.example.com`
       - Scheme: `http`
       - Forward Hostname / IP: `localhost`, or the name of the docker container if using a docker network
-      - Forward Port: Whatever port is defined in the docker-compose/`docker run` command/config.json (default is `80`)
+      - Forward Port: Whatever port is defined in the docker-compose/run command/config.json (default is `80`)
       - Enable `Cache Assets` and `Block Common Exploits`, but not `Websockets Support`
-    - Pyison supports NPM's strictest SSL settings
-    - The `User-Agent` http header should be relayed from NPM to the pyison server with the default settings, else use `proxy_pass_header User-Agent;`
   
-  - #### Nginx Proxy Manager: Sub-path Configuration
-    - To use Pyison in a sub-path, use the following location configuration
+  ### Sub-path Configuration
+  - To use Pyison in a sub-path, use the following location configuration
+  
       ```Nginx
       # Handles the root page ("example.com/tarpit")
       location /tarpit {
@@ -113,15 +118,17 @@ Pyison is a tarpit for AI webcrawlers
           proxy_pass http://localhost:80;
       }
       ```
-    - Here is a working setup using the UI:
-      <img src="Proxy Host sub-path config.png" alt='The NGINX Reverse Proxy interface. The "Edit Proxy Host dialogue is open to the "Custom locations" tab.' height="400"/>
+  - Here is a working setup using the UI:
+      
+    <img src="Proxy Host sub-path config.png" alt='The NGINX Reverse Proxy interface. The "Edit Proxy Host dialogue is open to the "Custom locations" tab.' height="400"/>
+    
       - The first location block, `/tarpit`, has no custom configuration. It will behave like the first location block defined above.
       - The second location block, `/tarpit/`, contains the second and third location blocks defined above
-    - Replace `tarpit` with the desired path.
-      - If using further sub-paths like `/tar/pit`, note that the third location block uses regex, so any slashes must be escaped with a backslash
+    - Replace `tarpit` with the desired root path.
+      - If using a deeper root path like `/tar/pit`, note that the third location block uses regex, so any slashes must be escaped with a backslash
         - eg: `/tar/pit` would require `location ~ .*\/tar\/pit\/.*\....$` in the 3rd location block
     - Update Pyison's `document-root` setting with the sub-path used by the proxy (see the [Configuration](#configuration) section)
-    - See [above](#nginx-proxy-manager-independent-subdomain-configuration) for further configuration of host, ports, SSL, etc
+    - See [above](#reverse-proxy) sections for further configuration of host, ports, SSL, etc
 
 ## Configuration
 - The config.json file defines various settings for easy customization:
