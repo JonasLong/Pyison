@@ -10,12 +10,12 @@
   "unsafe-characters": ["'","`"],
 
   "robots-txt": "robots.txt",
-  "html-templates": ["template.html"],
-  "css-files": ["style.css"],
+  "html-templates": ["assets/template.html"],
+  "css-files": ["assets/style.css"],
   "images": {
-    "ico":["logo.ico"],
-    "jpg":["logo.jpg"],
-    "png":["logo.png"]
+    "ico":["assets/logo.ico"],
+    "jpg":["assets/logo.jpg"],
+    "png":["assets/logo.png"]
   },
 
   "remove-from-stop-words":[

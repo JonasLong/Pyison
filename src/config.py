@@ -66,5 +66,5 @@ class Config:
         return getattr(self, ext)
 
     def __init__(self):
-        with open("config.json") as cfg:
+        with open("config/config.json") as cfg:
             self.opts = json.load(cfg)

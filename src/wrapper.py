@@ -8,10 +8,14 @@ def chooseItem(url: ParseResult, lst, config: Config):
     textSource = Generator(url, config)
     return textSource.chooseItem(lst)
 
+def getTemplate(url: ParseResult, config: Config):
+    with open(chooseItem(url, config.html_templates, config)) as tmp:
+        template: str = tmp.read()
+    return template
 
 def get_html(url: ParseResult, config: Config):
     text_source = Generator(url, config)  # Create new generator instance with random seed based on current url
-    res = template
+    res = getTemplate(url, config)
     title = text_source.unescapePageName()
     # Replace static text
     # every occurrence of {TITLE} will be replaced with the same text
@@ -68,7 +72,3 @@ def get_html(url: ParseResult, config: Config):
             res = res.replace("{NAME}", text_source.getName(), 1)
 
     return res
-
-
-with open("template.html") as tmp:
-    template: str = tmp.read()

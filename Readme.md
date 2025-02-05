@@ -34,7 +34,7 @@ Pyison is a tarpit for AI webcrawlers
 
 ## Getting Started
 - Clone this project to a local folder
-- Change settings in the `config.json` file
+- Change settings in the `config/config.json` file
     - Set the `random-seed` to a random number!
     - Set the `port` number for the server to use
     - See the [Configuration](#configuration) section for more info
@@ -48,7 +48,7 @@ Pyison is a tarpit for AI webcrawlers
     - Install nltk
         - `pip install nltk`
     - Run Pyison
-        - `python3 server.py`
+        - `python3 src/server.py`
     - Check it's running
         - Open `http://localhost:<your port number>` in a browser
 
@@ -90,7 +90,7 @@ Pyison is a tarpit for AI webcrawlers
   ### Independent Subdomain Configuration
   - Select the following settings in the UI, or enter the equivalent settings in the configuration file:
   
-    <img src="Proxy Host config.png" alt='The NGINX Reverse Proxy interface. The "Edit Proxy Host dialogue is open.' height="300"/>
+    <img src="docs/Proxy Host config.png" alt='The NGINX Reverse Proxy interface. The "Edit Proxy Host dialogue is open.' height="300"/>
 
       - Domain Names: A domain or subdomain you control, like `tarpit.example.com`
       - Scheme: `http`
@@ -120,7 +120,7 @@ Pyison is a tarpit for AI webcrawlers
       ```
   - Here is a working setup using the UI:
       
-    <img src="Proxy Host sub-path config.png" alt='The NGINX Reverse Proxy interface. The "Edit Proxy Host dialogue is open to the "Custom locations" tab.' height="400"/>
+    <img src="docs/Proxy Host sub-path config.png" alt='The NGINX Reverse Proxy interface. The "Edit Proxy Host dialogue is open to the "Custom locations" tab.' height="400"/>
     
       - The first location block, `/tarpit`, has no custom configuration. It will behave like the first location block defined above.
       - The second location block, `/tarpit/`, contains the second and third location blocks defined above
@@ -154,20 +154,20 @@ Pyison is a tarpit for AI webcrawlers
 - `unsafe-characters` (default ["'","`"])
     - Characters that can occur naturally in the word list but should be removed from URLs
     - By default, this removes apostrophes (`) and single quotes (')
-- `robots-txt` (default "robots.txt")
+- `robots-txt` (default "assets/robots.txt")
     - This configures the file that gets served at `/robots.txt`
     - If the string is empty, a 404 response will be returned instead
-- `html-templates` (default ["template.html"])
+- `html-templates` (default ["assets/template.html"])
     - HTML file to serve, containing format text to provide random values for (see HTML Templating)
     - Accepts either a single string, or a list of options to randomly choose from
-- `css-files` (default ["style.css"])
+- `css-files` (default ["assets/style.css"])
     - CSS file(s) to serve
     - No substitution is done on CSS files
     - Accepts either a single string, or a list of options to randomly choose from
 - `images`
-    - `ico` (default ["logo.ico"])
-    - `jpg` (default ["logo.jpg"])
-    - `png` (default["logo.png"])
+    - `ico` (default ["assets/logo.ico"])
+    - `jpg` (default ["assets/logo.jpg"])
+    - `png` (default["assets/logo.png"])
     - For each of the above image extensions: A single image file, or a list of images to pick randomly from
 - `remove-from-stop-words`
     - The nltk library has a "stop words" list that's useful to generate lots of common words. However, some entries shouldn't be used for text generation because they're an obvious giveaway that this is generated content
@@ -224,8 +224,8 @@ Pyison is a tarpit for AI webcrawlers
 
 ## Images
 
-<img src="logo.png" alt="Pyison logo. A rectangular landscape-oriented image with a grainy gray background. Bright green text in a paintbrushed font with a dark red text shadow is centered in the top third of the image. It reads 'Pyison'. Near the bottom, stylized angular white text reads 'This is a tar pit for AI webcrawlers'. There is visible jpeg artifcating throughout the image upon closer inspection." height="200"/>
+<img src="docs/logo.png" alt="Pyison logo. A rectangular landscape-oriented image with a grainy gray background. Bright green text in a paintbrushed font with a dark red text shadow is centered in the top third of the image. It reads 'Pyison'. Near the bottom, stylized angular white text reads 'This is a tar pit for AI webcrawlers'. There is visible jpeg artifcating throughout the image upon closer inspection." height="200"/>
   
 Here is a sample of how the site looks before any editing of the template:
    
-<img src="sample.png" alt="Zoomed out image of an entire Pyison page. It uses black text on a light yellow background. At the top of the page is a green navigation bar at the top with links containing random words. Below the nav bar is the title 'Home' and a logo image reading 'Pyison: This is a tar pit for AI webcrawlers'. Under the images is several paragraphs of random words with headings at various levels of indentation. These paragraphs takes up the majority of the page. Some of the text within the paragraphs are links to other pages. Near the bottom of the page, it has a fake author blurb with another Pyison logo. The blurb reads 'Written by It'S An'. Below that is an 'Other Posts' section, with several more links." height="500"/>
+<img src="docs/sample.png" alt="Zoomed out image of an entire Pyison page. It uses black text on a light yellow background. At the top of the page is a green navigation bar at the top with links containing random words. Below the nav bar is the title 'Home' and a logo image reading 'Pyison: This is a tar pit for AI webcrawlers'. Under the images is several paragraphs of random words with headings at various levels of indentation. These paragraphs takes up the majority of the page. Some of the text within the paragraphs are links to other pages. Near the bottom of the page, it has a fake author blurb with another Pyison logo. The blurb reads 'Written by It'S An'. Below that is an 'Other Posts' section, with several more links." height="500"/>

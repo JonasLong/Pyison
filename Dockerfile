@@ -5,4 +5,4 @@ RUN python3 -c "import nltk; nltk.download('words'); nltk.download('stopwords')"
 RUN mkdir /var/www
 COPY / ./var/www
 WORKDIR /var/www
-ENTRYPOINT ["python3", "server.py"]
+ENTRYPOINT ["python3", "src/server.py"]

@@ -1,7 +1,6 @@
 from http.server import HTTPServer
 from handler import Handler
 from config import Config
-from functools import partial
 
 def run(config:Config):
     print("Listening on port {}".format(config.port))
