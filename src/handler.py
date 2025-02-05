@@ -22,7 +22,6 @@ class Handler(BaseHTTPRequestHandler):
         url = urlparse(self.path)
         return url
 
-
     @cached_property
     def query_data(self):
         return dict(parse_qsl(self.url.query))
@@ -51,7 +50,8 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
 
-        if not (self.url.path.startswith(self.cfg.doc_root.path) or self.url.geturl().startswith(self.cfg.doc_root.path)):
+        if not (self.url.path.startswith(self.cfg.doc_root.path) or self.url.geturl().startswith(
+                self.cfg.doc_root.path)):
             # initial URL validation checks
             print("Invalid request! Not in document root")
             self.send_response(500)
@@ -110,8 +110,12 @@ class Handler(BaseHTTPRequestHandler):
         file_options = Handler.getCfg().name_by_ext(ext)  # Get possible files to send from the config
         # print("options:", file_options)
         chosen_file = wrapper.chooseItem(self.url, file_options, Handler.getCfg())  # Choose one at random
-        print("served {}".format(chosen_file))
-        self.wfile.write(self.load_binary(chosen_file))  # Send to client
+        if chosen_file is None:
+            print("Client requested a .{} file, but none was provided! Served 404".format(ext))
+            self.send_response(404)
+        else:
+            print("served {}".format(chosen_file))
+            self.wfile.write(self.load_binary(chosen_file))  # Send to client
 
     def getRobots(self):
         if self.cfg.robots_txt != "":
@@ -129,7 +133,7 @@ class Handler(BaseHTTPRequestHandler):
 
         # generate HTML
         # page = "<html><head></head><body>hi</body></html>"
-        page = wrapper.get_html(url, Handler.getCfg())
+        page = wrapper.getHtml(url, Handler.getCfg())
         print("served html with {} chars".format(len(page)))
         self.wfile.write(page.encode("utf-8"))
 

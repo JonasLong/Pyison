@@ -144,10 +144,10 @@ Pyison is a tarpit for AI webcrawlers
             - ie `https://example.com/pyison/` or `/pyison/`
 - `fake-image-dir` (default ["images"])
     - All images will appear to be served from this path
-    - Accepts either a single string, or a list of options to randomly choose from
+    - Accepts either a single string, null, or a list of options to randomly choose from
 - `fake-css-dir` (default ["css"])
     - All css files will appear to be served from this path
-    - Accepts either a single string, or a list of options to randomly choose from
+    - Accepts either a single string, null, or a list of options to randomly choose from
 - `spacing-characters` (default ["_","-","%20"])
     - Spaces to use between the words in a page URL
     - This will also affect how page URLs are split to decode back into titles
@@ -168,7 +168,7 @@ Pyison is a tarpit for AI webcrawlers
     - `ico` (default ["assets/logo.ico"])
     - `jpg` (default ["assets/logo.jpg"])
     - `png` (default["assets/logo.png"])
-    - For each of the above image extensions: A single image file, or a list of images to pick randomly from
+    - For each of the above image extensions: A single image file, null, or a list of images to pick randomly from
 - `remove-from-stop-words`
     - The nltk library has a "stop words" list that's useful to generate lots of common words. However, some entries shouldn't be used for text generation because they're an obvious giveaway that this is generated content
     
@@ -194,7 +194,7 @@ Pyison is a tarpit for AI webcrawlers
         - Make sure to specify '.css' immediately after the tag. This is how the webserver knows to send css rather than more html.
             - The actual document returned by the server will be chosen based on the css page(s) specified in the config
   ### Dynamic values
-    - Each occurrence of these tags will be replaced by a unique value
+  Each occurrence of these tags will be replaced by a unique value
     - `{WORD}`
         - Generates a single random word. Proper nouns may be capitalized.
     - `{NAME}`

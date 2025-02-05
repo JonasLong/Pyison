@@ -154,7 +154,9 @@ class Generator:
     def getLink(self):
         return path.join(self.getPath(), self.getPage())
 
-    def getSubpath(self, new_dir: str):
+    def getSubpath(self, new_dir: str | None):
+        if new_dir is None:
+            return self._genUrl(self.doc_root.path)
         return self._genUrl(path.join(self.doc_root.path, new_dir))
 
     def getLinkForTitle(self, title: str):
@@ -176,10 +178,20 @@ class Generator:
         else:
             return path.dirname(self.url.path)
 
-    def chooseItem(self, lst: list):
-        if len(lst) == 1:
-            return lst[0]
-        return random.choice(lst)
+    def chooseItem(self, items: list | str):
+        if items is None:
+            return None
+        elif type(items) == str:
+            if len(items) == 0:
+                return None
+            else:
+                return str
+        elif len(items) == 0:
+            return None
+        elif len(items) == 1:
+            return items[0]
+        else:
+            return random.choice(items)
 
 
 def main():

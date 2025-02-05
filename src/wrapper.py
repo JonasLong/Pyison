@@ -9,11 +9,14 @@ def chooseItem(url: ParseResult, lst, config: Config):
     return textSource.chooseItem(lst)
 
 def getTemplate(url: ParseResult, config: Config):
-    with open(chooseItem(url, config.html_templates, config)) as tmp:
+    template_file = chooseItem(url, config.html_templates, config)
+    if template_file is None:
+        raise Exception("No html templates have been defined in the configuration!")
+    with open(template_file) as tmp:
         template: str = tmp.read()
     return template
 
-def get_html(url: ParseResult, config: Config):
+def getHtml(url: ParseResult, config: Config):
     text_source = Generator(url, config)  # Create new generator instance with random seed based on current url
     res = getTemplate(url, config)
     title = text_source.unescapePageName()
