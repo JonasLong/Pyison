@@ -109,7 +109,7 @@ Pyison is a tarpit for AI webcrawlers
 
       # Handles all sub-pages ("example.com/tarpit/a" and "example.com/tarpit/a/b")
       location /tarpit/ {
-          proxy_pass http://pyison:80;
+          proxy_pass http://localhost:80;
       }
 
       # Handles all urls with a 3-letter file extension ("example.com/tarpit/style.css" and "example.com/tarpit/images/picture.jpg")
