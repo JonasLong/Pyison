@@ -1,6 +1,6 @@
 services:
   pyison:
-    image: ghcr.io/j0hnl0cke/pyison:main
+    image: ghcr.io/jonaslong/pyison:main
     container_name: pyison
     tty: true
     #volumes:

@@ -59,7 +59,7 @@ Pyison is a tarpit for AI webcrawlers
       ```yaml
       services:
         pyison:
-          image: "ghcr.io/j0hnl0cke/pyison:main"
+          image: "ghcr.io/jonaslong/pyison:main"
           container_name: pyison
           tty: true
           ports:
@@ -70,7 +70,7 @@ Pyison is a tarpit for AI webcrawlers
     - For changes to local files to have an effect, clone this repository and use a bind mount. See the [full compose file](docker-compose.yml).
     
     #### With docker run
-    - `docker run --tty --name pyison -p "127.0.0.1:80:80" --rm ghcr.io/j0hnl0cke/pyison:main`
+    - `docker run --tty --name pyison -p "127.0.0.1:80:80" --rm ghcr.io/jonaslong/pyison:main`
       - (Optional) Remove the `--rm` flag to persist the container
     
     #### Building from source
