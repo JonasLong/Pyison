@@ -1,0 +1,18 @@
+FROM alpine:3.23.5 as builder
+
+RUN apk --no-cache add binutils python3 git py3-pip
+RUN python -m pip install --break-system-packages nltk pyinstaller==6.18.0
+
+RUN python3 -c "import nltk; nltk.download('words'); nltk.download('stopwords')"
+COPY / ./
+RUN python -m PyInstaller src/server.py
+
+FROM alpine:3.23.5
+
+WORKDIR /var/www
+COPY --from=builder dist/server/_internal ./_internal
+COPY --from=builder dist/server/server .
+COPY --from=builder assets assets
+COPY --from=builder config config
+
+CMD ["./server"]
