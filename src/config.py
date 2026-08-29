@@ -12,6 +12,9 @@ class Config:
     def random_seed(self):
         return self.opts["random-seed"]
 
+    def random_seed_override(self, new_seed):
+        self.opts["random-seed"] = new_seed
+
     @property
     def spacing(self):
         return self.opts["spacing-characters"]
