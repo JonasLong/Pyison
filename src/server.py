@@ -1,6 +1,7 @@
 from http.server import HTTPServer
 from handler import Handler
 from config import Config
+import os
 
 def run(config:Config):
     print("Listening on port {}".format(config.port))
@@ -12,6 +13,8 @@ def run(config:Config):
 
 def main():
     config = Config()
+    seed = os.environ.get("PYISON_SEED", config.random_seed)
+    config.random_seed_override(seed)
     if config.random_seed == 0:
         print("Please update the random seed value in the config file!")
     run(config)
